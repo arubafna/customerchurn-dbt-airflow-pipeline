@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw data loaded from source systems
+    database: CUSTOMER_RETENTION_DB
+    schema: RAW
+    tables:
+      - name: activity_log
+        description: Customer activity events from web/mobile
+        columns:
+          - name: log_id
+            description: Unique identifier for each activity event
+          - name: user_id
+            description: Customer identifier (nullable for anonymous)
+          - name: action_type
+            description: Type of action (VIEW, SEARCH, ADD_TO_CART, etc)
+          - name: timestamp
+            description: When the action occurred
+          - name: session_id
+            description: Session identifier
+          - name: device
+            description: Device type (mobile, desktop, tablet)
+            
+      - name: transactions
+        description: Purchase transaction data in JSON format
+        columns:
+          - name: raw_data
+            description: Complete JSON object containing transaction details

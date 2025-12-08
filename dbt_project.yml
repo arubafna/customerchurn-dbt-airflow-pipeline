@@ -1,0 +1,51 @@
+name: 'customer_retention_pipeline'
+version: '1.0.0'
+config-version: 2
+
+# Project configuration
+profile: 'default'
+
+# Directory configuration
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Model configurations
+models:
+  customer_retention_pipeline:
+    # Staging models
+    staging:
+      +materialized: view
+      +schema: staging
+      +tags: ['staging']
+      
+    # Intermediate models  
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+      +tags: ['intermediate']
+      
+    # Mart models
+    marts:
+      +materialized: table
+      +schema: marts
+      +tags: ['marts']
+
+# Test configurations
+tests:
+  customer_retention_pipeline:
+    +store_failures: true
+    +schema: test_results
+
+# Variables
+vars:
+  # Reference date for time-based calculations
+  reference_date: "{{ run_started_at.strftime('%Y-%m-%d') }}"
