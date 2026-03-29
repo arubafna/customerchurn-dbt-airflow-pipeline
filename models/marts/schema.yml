@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: mrt_customer_retention_features
+    description: >
+      Final denormalized feature table for customer churn prediction.
+      Contains 27 features across 5 categories: Recency, Frequency, Monetary, Engagement, and Behavioral.
+      One row per user with no NULLs - fully ML-ready.
+    
+    meta:
+      owner: "Data Analytics Team"
+      use_case: "Customer Churn Prediction"
+      
+    columns:
+      - name: user_id
+        description: Unique customer identifier
+        tests:
+          - unique
+          - not_null
+          
+      - name: feature_snapshot_date
+        description: Date when features were calculated
+        tests:
+          - not_null
+      
+      # RECENCY FEATURES
+      - name: days_since_last_purchase
+        description: Days since last purchase (999 = never purchased)
+        tests:
+          - not_null
+          
+      - name: days_since_last_login
+        description: Days since last login/activity
+        tests:
+          - not_null
+          
+      - name: recency_bucket
+        description: Bucketed recency category
+        tests:
+          - accepted_values:
+              values: ['very_recent', 'recent', 'moderate', 'at_risk', 'never_purchased']
+      
+      # FREQUENCY FEATURES
+      - name: purchase_count_30d
+        description: Number of purchases in last 30 days
+        tests:
+          - not_null
+          
+      - name: session_count_30d
+        description: Number of sessions in last 30 days
+        tests:
+          - not_null
+      
+      # MONETARY FEATURES
+      - name: total_spend_30d
+        description: Total spend in last 30 days
+        tests:
+          - not_null
+          
+      - name: lifetime_value
+        description: Total lifetime customer value
+        tests:
+          - not_null
+      
+      # ENGAGEMENT FEATURES
+      - name: engagement_score
+        description: Composite engagement score (0-100)
+        tests:
+          - not_null
+      
+      # BEHAVIORAL FEATURES
+      - name: cart_abandonment_rate
+        description: Rate of cart abandonment (0-1)
+        tests:
+          - not_null
+          
+      - name: error_rate
+        description: Rate of errors encountered (0-1)
+        tests:
+          - not_null
+          
+      - name: purchase_conversion_rate
+        description: Rate of sessions resulting in purchase (0-1)
+        tests:
+          - not_null
+      
+      # DERIVED INDICATORS
+      - name: is_high_churn_risk
+        description: Boolean flag for high churn risk users
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+              
+      - name: activity_level
+        description: User activity level category
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['high', 'medium', 'low', 'inactive']
+              
+      - name: customer_segment
+        description: Customer value segment
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['vip', 'loyal', 'active', 'browser', 'dormant']
+              
+      - name: primary_device
+        description: Most frequently used device
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['mobile', 'desktop', 'tablet', 'unknown']

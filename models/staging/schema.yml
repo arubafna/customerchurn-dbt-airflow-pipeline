@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_activity_log
+    description: Cleaned and standardized customer activity events
+    columns:
+      - name: log_id
+        description: Unique identifier for activity event
+        tests:
+          - unique
+          - not_null
+          
+      - name: user_id
+        description: Customer identifier (nullable for anonymous sessions)
+        
+      - name: action_type
+        description: Type of action performed
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['VIEW', 'SEARCH', 'ADD_TO_CART', 'LOGIN', 'LOGOUT', 'ERROR']
+              
+      - name: activity_timestamp
+        description: When the action occurred
+        tests:
+          - not_null
+          
+      - name: device
+        description: Device type
+        tests:
+          - accepted_values:
+              values: ['mobile', 'desktop', 'tablet', 'unknown']
+              severity: warn
+
+  - name: stg_transactions
+    description: Parsed and cleaned transaction data
+    columns:
+      - name: transaction_id
+        description: Unique transaction identifier
+        tests:
+          - unique
+          - not_null
+          
+      - name: user_id
+        description: Customer who made the purchase
+        tests:
+          - not_null
+          
+      - name: purchase_amount
+        description: Total purchase amount
+        tests:
+          - not_null
+          
+      - name: purchase_timestamp
+        description: When the purchase occurred
+        tests:
+          - not_null
